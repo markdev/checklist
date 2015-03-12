@@ -98,7 +98,6 @@
 
 				$scope.newTask = "";
 				$scope.editValue = "";
-			//	$scope.showState = "all";
 				$scope.showAll = true;
 				$scope.showComplete = true;
 
@@ -109,7 +108,6 @@
 						created: 3,
 						updated: 4,
 						due: 5,
-						showState: 'ongoing',
 						complete: false,
 						editing: false
 					},
@@ -119,16 +117,29 @@
 						created: 5,
 						updated: 6,
 						due: 7,
-						showState: 'completed',
 						complete: true,
 						editing: false
 					}
 				];
 				$scope.show = function(show) {
-					$scope.showState = show;
-					$scope.ongoing = (show == "ongoing")? "pressed" : "";
-					$scope.completed = (show == "completed")? "pressed" : "";
-					$scope.all = (show == "all")? "pressed" : "";				
+					$scope.ongoing = "";
+					$scope.completed = "";
+					$scope.all = "";
+					if (show == "ongoing") {
+						$scope.ongoing = "pressed";
+						$scope.showComplete = false;
+						$scope.showAll = false;
+					}
+					if (show == "completed") {
+						$scope.completed = "pressed";
+						$scope.showComplete = true;
+						$scope.showAll = false;
+					}
+					if (show == "all") {
+						$scope.all = "pressed";
+						$scope.showComplete = false;
+						$scope.showAll = true;
+					}			
 				};
 				$scope.delete = function(id) {
 					var del = confirm("Are you sure you want to delete this task?");
@@ -157,8 +168,6 @@
 					$scope.showPopup = true;				
 				};
 				$scope.save = function(id) {
-					console.log(id);
-					console.log($scope.tasks);
 					for (var i in $scope.tasks) {
 						if ($scope.tasks[i].id == id) {
 							$scope.tasks[i].editing = false;
@@ -167,7 +176,6 @@
 					}
 				};
 				$scope.closePopup = function(id) {
-					console.log(id);
 					$scope.showPopup = false;
 					for (var i in $scope.tasks) {
 						if ($scope.tasks[i].id == id) {
@@ -183,7 +191,7 @@
 					newTask.created = Date.now();
 					newTask.updated = 4;
 					newTask.due = 5;
-					newTask.showState = "ongoing";
+					newTask.complete = false;
 					newTask.editing = false;
 					$scope.tasks[$scope.tasks.length] = newTask;
 					$scope.newTask = "";
