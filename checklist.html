@@ -1,7 +1,7 @@
 <!doctype html>
 <html>
 	<head>
-		<script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.3.14/angular.min.js"></script>
+		<script src="angular.js"></script>
 		<style>
 			tr.itemRow:hover {
 				background-color: #0ff;
@@ -40,10 +40,6 @@
 				<tr>
 					<td>Due date:</td>
 					<td><input type="text" ng-model="currentTask.due" /></td>
-				</tr>
-				<tr>
-					<td>Completed:</td>
-					<td><input type="checkbox" ng-checked="currentTask.complete"/></td>
 				</tr>
 				<tr>
 					<td colspan="2">
@@ -105,18 +101,18 @@
 					{
 						id: 1,
 						name: "Make a checklist",
-						created: 3,
-						updated: 4,
-						due: 5,
+						created: Date.now(),
+						updated: Date.now(),
+						due: Date.now(),
 						complete: false,
 						editing: false
 					},
 					{
 						id: 2,
 						name: "Git a checklist",
-						created: 5,
-						updated: 6,
-						due: 7,
+						created: Date.now(),
+						updated: Date.now(),
+						due: Date.now(),
 						complete: true,
 						editing: false
 					}
@@ -189,8 +185,8 @@
 					newTask.id = $scope.tasks[$scope.tasks.length-1].id + 1;
 					newTask.name = $scope.newTask;
 					newTask.created = Date.now();
-					newTask.updated = 4;
-					newTask.due = 5;
+					newTask.updated = Date.now();
+					newTask.due = Date.now();
 					newTask.complete = false;
 					newTask.editing = false;
 					$scope.tasks[$scope.tasks.length] = newTask;
