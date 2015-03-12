@@ -28,7 +28,7 @@
 						{{ task.name }}
 					</div>
 					<div ng-show="task.editing">
-						<input type="text" ng-model="task.name"/>
+						<input type="text" ng-bind="task.name"/>
 						<button ng-click="save(task.id)">Save</delete>
 					</div>
 				</td>
@@ -47,9 +47,6 @@
 			<li>Edit</li>
 			<li>Mark Complete</li>
 			<li>Mark Ongoing</li>
-			<li>View Ongoing</li>
-			<li>View Completed</li>
-			<li>View All</li>
 			<li>View Single</li>
 		</ul>
 
@@ -111,11 +108,11 @@
 				$scope.save = function(id) {
 					console.log(id);
 					console.log($scope.editValue);
+					console.log($scope.tasks);
 					for (var i in $scope.tasks) {
 						if ($scope.tasks[i].id == id) {
-							//console.log($scope.tasks[i]);
+							console.log($scope.tasks[i]);
 							$scope.tasks[i].name = $scope.editValue;
-						console.log($scope.tasks[i]);
 							$scope.tasks[i].editing = false;
 							$scope.editValue = "";
 						}
@@ -128,7 +125,7 @@
 					newTask.created = Date.now();
 					newTask.updated = 4;
 					newTask.due = 5;
-					newTask.completed = false;
+					newTask.showState = "ongoing";
 					newTask.editing = false;
 					$scope.tasks[$scope.tasks.length] = newTask;
 					$scope.newTask = "";
