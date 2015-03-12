@@ -112,26 +112,24 @@
 				$scope.showAll = true;
 				$scope.showComplete = true;
 
-				$scope.tasks = [
-					{
-						id: 1,
+				$scope.tasks = [];
+				$scope.tasks[0] = {
+						id: 0,
 						name: "Make a checklist",
 						created: Date.now(),
 						updated: Date.now(),
 						due: Date.now(),
 						complete: false,
-						editing: false
-					},
-					{
-						id: 2,
+						editing: false };
+				$scope.tasks[1] = {
+						id: 1,
 						name: "Git a checklist",
 						created: Date.now(),
 						updated: Date.now(),
 						due: Date.now(),
 						complete: true,
-						editing: false
-					}
-				];
+						editing: false };
+
 				$scope.show = function(show) {
 					$scope.ongoing = "";
 					$scope.completed = "";
@@ -152,59 +150,53 @@
 						$scope.showAll = true;
 					}			
 				};
+				
 				$scope.delete = function(id) {
 					var del = confirm("Are you sure you want to delete this task?");
 					if (del) {
+						/*
 						for (var i in $scope.tasks) {
 							if ($scope.tasks[i].id == id) {
 								$scope.tasks.splice(i, 1);
 							}
 						}
+						*/
 					}
 				};
+
 				$scope.edit = function(id) {
-					for (var i in $scope.tasks) {
-						if ($scope.tasks[i].id == id) {
-							$scope.tasks[i].editing = true;
-							$scope.editValue = $scope.tasks[i].name;
-						}
-					}
+					$scope.tasks[id].editing = true;
+					$scope.editValue = $scope.tasks[id].name;					
 				};
+
 				$scope.popUp = function(id) {
-					for (var i in $scope.tasks) {
-						if ($scope.tasks[i].id == id) {
-							$scope.currentTask = $scope.tasks[i];
-						}
-					}	
+					$scope.currentTask = $scope.tasks[id];
 					$scope.showPopup = true;				
 				};
+
 				$scope.save = function(id) {
-					for (var i in $scope.tasks) {
-						if ($scope.tasks[i].id == id) {
-							$scope.tasks[i].editing = false;
-							$scope.tasks[i].updated = Date.now();
-						}
-					}
+					$scope.tasks[id].editing = false;
+					$scope.tasks[id].updated = Date.now();
 				};
+
 				$scope.closePopup = function(id) {
 					$scope.showPopup = false;
-					for (var i in $scope.tasks) {
-						if ($scope.tasks[i].id == id) {
-							console.log($scope.tasks[i]);
-							console.log($scope.currentTask);
-						}
-					}
 				};
+
 				$scope.addTask = function() {
+					var id = null;
+					for (var i in $scope.tasks) { id = i; }	// gets the last index in $scope.tasks without using .pop()
+
 					var newTask = {};
-					newTask.id = $scope.tasks[$scope.tasks.length-1].id + 1;
+					newTask.id = parseInt(id) + 1;
 					newTask.name = $scope.newTask;
 					newTask.created = Date.now();
 					newTask.updated = Date.now();
 					newTask.due = Date.now();
 					newTask.complete = false;
 					newTask.editing = false;
-					$scope.tasks[$scope.tasks.length] = newTask;
+
+					$scope.tasks[parseInt(id) + 1] = newTask;
 					$scope.newTask = "";
 					console.log($scope.tasks);
 				};
