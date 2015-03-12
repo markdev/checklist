@@ -2,15 +2,24 @@
 <html>
 	<head>
 		<script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.3.14/angular.min.js"></script>
+		<style>
+			tr.itemRow:hover {
+				background-color: #0ff;
+			}
+		</style>
 		<title>Checklist</title>
 	</head>
 	<body ng-app="checklist" ng-controller="MainCtrl">
 		<h1>Hello checklist</h1>
 		<table>
-			<tr ng-repeat="task in tasks">
+			<tr class="itemRow" ng-repeat="task in tasks">
 				<td>
-					<div ng-click="edit">
+					<div ng-show="!task.editing" ng-click="edit(task.id)">
 						{{ task.name }}
+					</div>
+					<div ng-show="task.editing">
+						<input type="text" ng-model="task.name"/>
+						<button ng-click="save(task.id)">Save</delete>
 					</div>
 				</td>
 				<td>
@@ -39,6 +48,7 @@
 
 			app.controller('MainCtrl', ['$scope', function($scope) {
 				$scope.newTask = "";
+				$scope.editValue = "";
 				$scope.tasks = [
 					{
 						id: 1,
@@ -46,7 +56,8 @@
 						created: 3,
 						updated: 4,
 						due: 5,
-						completed: false
+						completed: false,
+						editing: false
 					},
 					{
 						id: 2,
@@ -54,7 +65,8 @@
 						created: 5,
 						updated: 6,
 						due: 7,
-						completed: true
+						completed: true,
+						editing: false
 					}
 				];
 				$scope.delete = function(id) {
@@ -67,6 +79,27 @@
 						}
 					}
 				};
+				$scope.edit = function(id) {
+					for (var i in $scope.tasks) {
+						if ($scope.tasks[i].id == id) {
+							$scope.tasks[i].editing = true;
+							$scope.editValue = $scope.tasks[i].name;
+						}
+					}
+				};
+				$scope.save = function(id) {
+					console.log(id);
+					console.log($scope.editValue);
+					for (var i in $scope.tasks) {
+						if ($scope.tasks[i].id == id) {
+							//console.log($scope.tasks[i]);
+							$scope.tasks[i].name = $scope.editValue;
+						console.log($scope.tasks[i]);
+							$scope.tasks[i].editing = false;
+							$scope.editValue = "";
+						}
+					}
+				};
 				$scope.addTask = function() {
 					var newTask = {};
 					newTask.id = $scope.tasks[$scope.tasks.length-1].id + 1;
@@ -75,6 +108,7 @@
 					newTask.updated = 4;
 					newTask.due = 5;
 					newTask.completed = false;
+					newTask.editing = false;
 					$scope.tasks[$scope.tasks.length] = newTask;
 					$scope.newTask = "";
 					console.log($scope.tasks);
