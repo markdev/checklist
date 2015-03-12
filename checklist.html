@@ -1,13 +1,12 @@
 <!doctype html>
 <html>
 	<head>
+		<link href="http://maxcdn.bootstrapcdn.com/bootstrap/3.3.2/css/bootstrap.min.css" rel="stylesheet">
+		<script src="http://maxcdn.bootstrapcdn.com/bootstrap/3.3.2/js/bootstrap.min.js"></script>
 		<script src="angular.js"></script>
 		<style>
 			tr.itemRow:hover {
 				background-color: #0ff;
-			}
-			button.pressed {
-				background-color: #f00;
 			}
 			div#popup {
 				position: fixed;
@@ -19,10 +18,16 @@
 				left: 30%;
 				top: 10%;
 			}
+			.center-table {
+				margin: 20px auto !important;
+				float: none !important;
+			}
 		</style>
-		<title>Checklist</title>
+		<title>My Checklist</title>
 	</head>
 	<body ng-app="checklist" ng-controller="MainCtrl">
+
+		<!-- This is the popup -->
 		<div id="popup" ng-show="showPopup">
 			<table>
 				<tr>
@@ -48,38 +53,50 @@
 				</tr>
 			</table>
 		</div>
-		<h1>Checklist</h1>
-		<table>
-			<tr>
-				<td><button ng-class="ongoing" ng-click="show('ongoing')">Show Ongoing Tasks</button></td>
-				<td><button ng-class="completed" ng-click="show('completed')">Show Completed Tasks</button></td>
-				<td><button ng-class="all" ng-click="show('all')">Show All Tasks</button></td>
-			</tr>
-		</table>
-		<table>
-			<tr class="itemRow" ng-repeat="task in tasks">
-				<td ng-if="task.complete == showComplete || showAll">
-					<input type="checkbox" ng-model="task.complete"/>
-				</td>
-				<td ng-if="task.complete == showComplete || showAll">
-					<div ng-show="!task.editing" ng-click="edit(task.id)">
-						{{ task.name }}
-					</div>
-					<div ng-show="task.editing">
-						<input type="text" ng-model="task.name"/>
-						<button ng-click="save(task.id)">Save</delete>
-					</div>
-				</td>
-				<td ng-if="task.complete == showComplete || showAll">
-					<span> {{task.due}} </span>
-				</td>
-				<td ng-if="task.complete == showComplete || showAll">
-					<button ng-click="popUp(task.id)">Edit</button>
-				</td>
-			</tr>
-		</table>
-		<input type="text" ng-model="newTask">
-		<button ng-click="addTask()">Add new task</button>
+
+		
+		<div class="container">
+			<div class="jumbotron">
+				<div class="page-header" style="text-align: center;">
+					<h1>My Checklist</h1>
+				</div>
+				<table class="center-table">
+					<tr>
+						<td><button class="btn-primary" ng-class="ongoing" ng-click="show('ongoing')">Show Ongoing Tasks</button></td>
+						<td><button class="btn-primary" ng-class="completed" ng-click="show('completed')">Show Completed Tasks</button></td>
+						<td><button class="btn-primary" ng-class="all" ng-click="show('all')">Show All Tasks</button></td>
+					</tr>
+				</table>
+				<table class="table-hover center-table">
+					<tr class="itemRow" ng-repeat="task in tasks">
+						<td class="col-md-1" ng-if="task.complete == showComplete || showAll">
+							<input type="checkbox" ng-model="task.complete"/>
+						</td>
+						<td class="col-md-10" ng-if="task.complete == showComplete || showAll">
+							<div ng-show="!task.editing" ng-click="edit(task.id)">
+								{{ task.name }}
+							</div>
+							<div ng-show="task.editing">
+								<input type="text" ng-model="task.name"/>
+								<button ng-click="save(task.id)">Save</delete>
+							</div>
+						</td>
+						<td class="col-md-5" ng-if="task.complete == showComplete || showAll">
+							<span> {{task.due}} </span>
+						</td>
+						<td class="col-md-3" ng-if="task.complete == showComplete || showAll">
+							<button ng-click="popUp(task.id)">Edit</button>
+						</td>
+					</tr>
+				</table>
+				<table class="center-table">
+					<tr>
+						<td><input type="text" ng-model="newTask"></td>
+						<td><button ng-click="addTask()">Add new task</button></td>
+					</tr>
+				</table>
+			</div>
+		</div>
 
 		<script>
 			var app = angular.module('checklist', []);
