@@ -22,6 +22,12 @@
 			</tr>
 		</table>
 		<table>
+			<thead>
+				<td>Task</td>
+				<td>Complete</td>
+				<td>Delete</td>
+				<td>Due Date</td>
+			</thead>
 			<tr class="itemRow" ng-repeat="task in tasks">
 				<td ng-if="task.showState == showState || showState == 'all'">
 					<div ng-show="!task.editing" ng-click="edit(task.id)">
