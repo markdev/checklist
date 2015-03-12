@@ -6,13 +6,55 @@
 	</head>
 	<body ng-app="checklist" ng-controller="MainCtrl">
 		<h1>Hello checklist</h1>
-		<input type="text" ng-model="test" />
+		<table>
+			<tr ng-repeat="task in tasks">
+				<td>
+					<div ng-click="">
+						{{ task.name }}
+					</div>
+				</td>
+				<td>
+					<input type="checkbox" />
+				</td>
+			</tr>
+		</table>
+		<input type="text" ng-model="newTask">
+		<button ng-click="addTask()">Add new task</button>
 		<script>
 			var app = angular.module('checklist', []);
 
 			app.controller('MainCtrl', ['$scope', function($scope) {
-				$scope.test = "foo";
+				$scope.newTask = "";
+				$scope.tasks = [
+					{
+						name: "Make a checklist",
+						created: 3,
+						updated: 4,
+						due: 5,
+						completed: false
+					},
+					{
+						name: "Git a checklist",
+						created: 5,
+						updated: 6,
+						due: 7,
+						completed: true
+					}
+				];
+				$scope.addTask = function() {
+					var newTask = {};
+					newTask.name = $scope.newTask;
+					newTask.created = Date.now();
+					newTask.updated = 4;
+					newTask.due = 5;
+					newTask.completed = false;
+					$scope.tasks[$scope.tasks.length] = newTask;
+					$scope.newTask = "";
+					console.log($scope.tasks);
+				};
 			}]);
 		</script>
 	</body>
 </html>
+
+
