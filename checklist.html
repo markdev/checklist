@@ -9,17 +9,31 @@
 		<table>
 			<tr ng-repeat="task in tasks">
 				<td>
-					<div ng-click="">
+					<div ng-click="edit">
 						{{ task.name }}
 					</div>
 				</td>
 				<td>
 					<input type="checkbox" />
 				</td>
+				<td>
+					<button ng-click="delete(task.id)">Delete</button>
+				</td>
 			</tr>
 		</table>
 		<input type="text" ng-model="newTask">
 		<button ng-click="addTask()">Add new task</button>
+
+		<ul>
+			<li>Edit</li>
+			<li>Mark Complete</li>
+			<li>Mark Ongoing</li>
+			<li>View Ongoing</li>
+			<li>View Completed</li>
+			<li>View All</li>
+			<li>View Single</li>
+		</ul>
+
 		<script>
 			var app = angular.module('checklist', []);
 
@@ -27,6 +41,7 @@
 				$scope.newTask = "";
 				$scope.tasks = [
 					{
+						id: 1,
 						name: "Make a checklist",
 						created: 3,
 						updated: 4,
@@ -34,6 +49,7 @@
 						completed: false
 					},
 					{
+						id: 2,
 						name: "Git a checklist",
 						created: 5,
 						updated: 6,
@@ -41,8 +57,19 @@
 						completed: true
 					}
 				];
+				$scope.delete = function(id) {
+					var del = confirm("Are you sure you want to delete this task?");
+					if (del) {
+						for (var i in $scope.tasks) {
+							if ($scope.tasks[i].id == id) {
+								$scope.tasks.splice(i, 1);
+							}
+						}
+					}
+				};
 				$scope.addTask = function() {
 					var newTask = {};
+					newTask.id = $scope.tasks[$scope.tasks.length-1].id + 1;
 					newTask.name = $scope.newTask;
 					newTask.created = Date.now();
 					newTask.updated = 4;
