@@ -9,10 +9,49 @@
 			button.pressed {
 				background-color: #f00;
 			}
+			div#popup {
+				position: fixed;
+				width: 300px;
+				height: 500px;
+				border: 2px solid black;
+				background-color: white;
+				z-index: 10;
+				left: 30%;
+				top: 10%;
+			}
 		</style>
 		<title>Checklist</title>
 	</head>
 	<body ng-app="checklist" ng-controller="MainCtrl">
+		<div id="popup" ng-show="showPopup">
+			<table>
+				<tr>
+					<td>Task Name:</td>
+					<td><input type="text"/></td>
+				<tr>
+				<tr>
+					<td>Created:</td>
+					<td>243523453</td>
+				</tr>
+				<tr>
+					<td>Updated:</td>
+					<td>asdfsdf</td>
+				</tr>
+				<tr>
+					<td>Due date:</td>
+					<td><input type="text" val="dafasdf" /></td>
+				</tr>
+				<tr>
+					<td>Completed:</td>
+					<td><input type="checkbox" /></td>
+				</tr>
+				<tr>
+					<td colspan="2">
+						<button ng-click="closePopup()">Save</button>
+					</td>
+				</tr>
+			</table>
+		</div>
 		<h1>Hello checklist</h1>
 		<table>
 			<tr>
@@ -23,12 +62,15 @@
 		</table>
 		<table>
 			<thead>
-				<td>Task</td>
-				<td>Complete</td>
-				<td>Delete</td>
+				<td>Check</td>
+				<td>Task Name</td>
 				<td>Due Date</td>
+				<td>Edit</td>
 			</thead>
 			<tr class="itemRow" ng-repeat="task in tasks">
+				<td ng-if="task.showState == showState || showState == 'all'">
+					<input type="checkbox" />
+				</td>
 				<td ng-if="task.showState == showState || showState == 'all'">
 					<div ng-show="!task.editing" ng-click="edit(task.id)">
 						{{ task.name }}
@@ -38,11 +80,11 @@
 						<button ng-click="save(task.id)">Save</delete>
 					</div>
 				</td>
-				<td ng-if="task.showState == showState || showState == 'all'">
-					<input type="checkbox" />
+				<td>
+					<span> {{task.due}} </span>
 				</td>
 				<td ng-if="task.showState == showState || showState == 'all'">
-					<button ng-click="delete(task.id)">Delete</button>
+					<button ng-click="popUp(task.id)">Edit</button>
 				</td>
 			</tr>
 		</table>
@@ -63,6 +105,7 @@
 				$scope.ongoing = "";
 				$scope.completed = "";
 				$scope.all = "";
+				$scope.showPopup = false;
 
 				$scope.newTask = "";
 				$scope.editValue = "";
@@ -111,14 +154,26 @@
 						}
 					}
 				};
+				$scope.popUp = function(id) {
+					for (var i in $scope.tasks) {
+						if ($scope.tasks[i].id == id) {
+							$scope.currentTask = $scope.tasks[i];
+						}
+					}	
+					$scope.showPopup = true;				
+				};
 				$scope.save = function(id) {
 					console.log(id);
 					console.log($scope.tasks);
 					for (var i in $scope.tasks) {
 						if ($scope.tasks[i].id == id) {
 							$scope.tasks[i].editing = false;
+							$scope.tasks[i].updated = Date.now();
 						}
 					}
+				};
+				$scope.closePopup = function() {
+					$scope.showPopup = false;
 				};
 				$scope.addTask = function() {
 					var newTask = {};
