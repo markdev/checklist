@@ -6,14 +6,24 @@
 			tr.itemRow:hover {
 				background-color: #0ff;
 			}
+			button.pressed {
+				background-color: #f00;
+			}
 		</style>
 		<title>Checklist</title>
 	</head>
 	<body ng-app="checklist" ng-controller="MainCtrl">
 		<h1>Hello checklist</h1>
 		<table>
+			<tr>
+				<td><button ng-class="ongoing" ng-click="show('ongoing')">Show Ongoing Tasks</button></td>
+				<td><button ng-class="completed" ng-click="show('completed')">Show Completed Tasks</button></td>
+				<td><button ng-class="all" ng-click="show('all')">Show All Tasks</button></td>
+			</tr>
+		</table>
+		<table>
 			<tr class="itemRow" ng-repeat="task in tasks">
-				<td>
+				<td ng-if="task.showState == showState || showState == 'all'">
 					<div ng-show="!task.editing" ng-click="edit(task.id)">
 						{{ task.name }}
 					</div>
@@ -22,10 +32,10 @@
 						<button ng-click="save(task.id)">Save</delete>
 					</div>
 				</td>
-				<td>
+				<td ng-if="task.showState == showState || showState == 'all'">
 					<input type="checkbox" />
 				</td>
-				<td>
+				<td ng-if="task.showState == showState || showState == 'all'">
 					<button ng-click="delete(task.id)">Delete</button>
 				</td>
 			</tr>
@@ -47,8 +57,13 @@
 			var app = angular.module('checklist', []);
 
 			app.controller('MainCtrl', ['$scope', function($scope) {
+				$scope.ongoing = "";
+				$scope.completed = "";
+				$scope.all = "";
+
 				$scope.newTask = "";
 				$scope.editValue = "";
+				$scope.showState = "all";
 				$scope.tasks = [
 					{
 						id: 1,
@@ -56,7 +71,7 @@
 						created: 3,
 						updated: 4,
 						due: 5,
-						completed: false,
+						showState: 'ongoing',
 						editing: false
 					},
 					{
@@ -65,10 +80,16 @@
 						created: 5,
 						updated: 6,
 						due: 7,
-						completed: true,
+						showState: 'completed',
 						editing: false
 					}
 				];
+				$scope.show = function(show) {
+					$scope.showState = show;
+					$scope.ongoing = (show == "ongoing")? "pressed" : "";
+					$scope.completed = (show == "completed")? "pressed" : "";
+					$scope.all = (show == "all")? "pressed" : "";				
+				};
 				$scope.delete = function(id) {
 					var del = confirm("Are you sure you want to delete this task?");
 					if (del) {
