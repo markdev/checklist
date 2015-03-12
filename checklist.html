@@ -27,32 +27,32 @@
 			<table>
 				<tr>
 					<td>Task Name:</td>
-					<td><input type="text"/></td>
+					<td><input type="text" ng-model="currentTask.name" /></td>
 				<tr>
 				<tr>
 					<td>Created:</td>
-					<td>243523453</td>
+					<td>{{currentTask.created}}</td>
 				</tr>
 				<tr>
 					<td>Updated:</td>
-					<td>asdfsdf</td>
+					<td>{{currentTask.updated}}</td>
 				</tr>
 				<tr>
 					<td>Due date:</td>
-					<td><input type="text" val="dafasdf" /></td>
+					<td><input type="text" ng-model="currentTask.due" /></td>
 				</tr>
 				<tr>
 					<td>Completed:</td>
-					<td><input type="checkbox" /></td>
+					<td><input type="checkbox" ng-checked="currentTask.complete"/></td>
 				</tr>
 				<tr>
 					<td colspan="2">
-						<button ng-click="closePopup()">Save</button>
+						<button ng-click="closePopup(currentTask.id)">Save</button>
 					</td>
 				</tr>
 			</table>
 		</div>
-		<h1>Hello checklist</h1>
+		<h1>Checklist</h1>
 		<table>
 			<tr>
 				<td><button ng-class="ongoing" ng-click="show('ongoing')">Show Ongoing Tasks</button></td>
@@ -61,17 +61,11 @@
 			</tr>
 		</table>
 		<table>
-			<thead>
-				<td>Check</td>
-				<td>Task Name</td>
-				<td>Due Date</td>
-				<td>Edit</td>
-			</thead>
 			<tr class="itemRow" ng-repeat="task in tasks">
-				<td ng-if="task.showState == showState || showState == 'all'">
-					<input type="checkbox" />
+				<td ng-if="task.complete == showComplete || showAll">
+					<input type="checkbox" ng-model="task.complete"/>
 				</td>
-				<td ng-if="task.showState == showState || showState == 'all'">
+				<td ng-if="task.complete == showComplete || showAll">
 					<div ng-show="!task.editing" ng-click="edit(task.id)">
 						{{ task.name }}
 					</div>
@@ -80,10 +74,10 @@
 						<button ng-click="save(task.id)">Save</delete>
 					</div>
 				</td>
-				<td>
+				<td ng-if="task.complete == showComplete || showAll">
 					<span> {{task.due}} </span>
 				</td>
-				<td ng-if="task.showState == showState || showState == 'all'">
+				<td ng-if="task.complete == showComplete || showAll">
 					<button ng-click="popUp(task.id)">Edit</button>
 				</td>
 			</tr>
@@ -91,25 +85,23 @@
 		<input type="text" ng-model="newTask">
 		<button ng-click="addTask()">Add new task</button>
 
-		<ul>
-			<li>Edit</li>
-			<li>Mark Complete</li>
-			<li>Mark Ongoing</li>
-			<li>View Single</li>
-		</ul>
-
 		<script>
 			var app = angular.module('checklist', []);
 
 			app.controller('MainCtrl', ['$scope', function($scope) {
 				$scope.ongoing = "";
 				$scope.completed = "";
-				$scope.all = "";
+				$scope.all = "pressed";
+
 				$scope.showPopup = false;
+				$scope.currentTask = {};
 
 				$scope.newTask = "";
 				$scope.editValue = "";
-				$scope.showState = "all";
+			//	$scope.showState = "all";
+				$scope.showAll = true;
+				$scope.showComplete = true;
+
 				$scope.tasks = [
 					{
 						id: 1,
@@ -118,6 +110,7 @@
 						updated: 4,
 						due: 5,
 						showState: 'ongoing',
+						complete: false,
 						editing: false
 					},
 					{
@@ -127,6 +120,7 @@
 						updated: 6,
 						due: 7,
 						showState: 'completed',
+						complete: true,
 						editing: false
 					}
 				];
@@ -172,8 +166,15 @@
 						}
 					}
 				};
-				$scope.closePopup = function() {
+				$scope.closePopup = function(id) {
+					console.log(id);
 					$scope.showPopup = false;
+					for (var i in $scope.tasks) {
+						if ($scope.tasks[i].id == id) {
+							console.log($scope.tasks[i]);
+							console.log($scope.currentTask);
+						}
+					}
 				};
 				$scope.addTask = function() {
 					var newTask = {};
