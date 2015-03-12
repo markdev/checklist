@@ -5,9 +5,6 @@
 		<script src="http://maxcdn.bootstrapcdn.com/bootstrap/3.3.2/js/bootstrap.min.js"></script>
 		<script src="angular.js"></script>
 		<style>
-			tr.itemRow:hover {
-				background-color: #0ff;
-			}
 			div#popup {
 				position: fixed;
 				z-index: 10;
@@ -25,7 +22,7 @@
 
 		<!-- This is the popup -->
 		<div class="container" id="popup" ng-show="showPopup">
-			<div class="jumbotron">
+			<div class="jumbotron" style="width: 400px;">
 				<table>
 					<tr>
 						<td>Task Name:</td>
@@ -44,9 +41,8 @@
 						<td><input type="text" ng-model="currentTask.due" /></td>
 					</tr>
 					<tr>
-						<td colspan="2">
-							<button ng-click="closePopup(currentTask.id)">Save</button>
-						</td>
+						<td><button ng-click="closePopup(currentTask.id)">Save</button></td>
+						<td><button ng-click="delete(currentTask.id)">Delete</button></td>
 					</tr>
 				</table>
 			</div>
@@ -65,7 +61,13 @@
 						<td><button class="btn-primary" ng-class="all" ng-click="show('all')">Show All Tasks</button></td>
 					</tr>
 				</table>
-				<table class="table-hover center-table">
+				<table class="table table-hover center-table">
+					<thead>
+						<td></td>
+						<td>Task</td>
+						<td>Due Date</td>
+						<td></td>
+					</thead>
 					<tr class="itemRow" ng-repeat="task in tasks">
 						<td class="col-md-1" ng-if="task.complete == showComplete || showAll">
 							<input type="checkbox" ng-model="task.complete"/>
@@ -100,6 +102,11 @@
 			var app = angular.module('checklist', []);
 
 			app.controller('MainCtrl', ['$scope', function($scope) {
+				var getCurrentDate = function() {
+					var date = new Date(Date.now());
+					return date;
+				};
+
 				$scope.ongoing = "";
 				$scope.completed = "";
 				$scope.all = "pressed";
@@ -116,17 +123,17 @@
 				$scope.tasks[0] = {
 						id: 0,
 						name: "Make a checklist",
-						created: Date.now(),
-						updated: Date.now(),
-						due: Date.now(),
+						created: getCurrentDate(),
+						updated: getCurrentDate(),
+						due: getCurrentDate(),
 						complete: false,
 						editing: false };
 				$scope.tasks[1] = {
 						id: 1,
 						name: "Git a checklist",
-						created: Date.now(),
-						updated: Date.now(),
-						due: Date.now(),
+						created: getCurrentDate(),
+						updated: getCurrentDate(),
+						due: getCurrentDate(),
 						complete: true,
 						editing: false };
 
@@ -150,17 +157,12 @@
 						$scope.showAll = true;
 					}			
 				};
-				
+
 				$scope.delete = function(id) {
 					var del = confirm("Are you sure you want to delete this task?");
 					if (del) {
-						/*
-						for (var i in $scope.tasks) {
-							if ($scope.tasks[i].id == id) {
-								$scope.tasks.splice(i, 1);
-							}
-						}
-						*/
+						$scope.tasks.splice(id, 1);
+						$scope.closePopup(id);
 					}
 				};
 
@@ -184,15 +186,18 @@
 				};
 
 				$scope.addTask = function() {
+					var date = new Date(Date.now());
+					console.log(date.getHours());
+
 					var id = null;
 					for (var i in $scope.tasks) { id = i; }	// gets the last index in $scope.tasks without using .pop()
 
 					var newTask = {};
 					newTask.id = parseInt(id) + 1;
 					newTask.name = $scope.newTask;
-					newTask.created = Date.now();
-					newTask.updated = Date.now();
-					newTask.due = Date.now();
+					newTask.created = getCurrentDate();
+					newTask.updated = getCurrentDate();
+					newTask.due = "";
 					newTask.complete = false;
 					newTask.editing = false;
 
